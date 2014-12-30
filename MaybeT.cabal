@@ -1,5 +1,5 @@
 Name:                MaybeT
-Version:             0.1.2
+Version:             0.1.3
 Synopsis:            MaybeT monad transformer
 Description:         Support for computations with failures.
 License:             BSD3
