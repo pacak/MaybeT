@@ -31,6 +31,7 @@ module Control.Monad.Maybe (
   -- $MaybeExample
   ) where
 
+import Control.Applicative
 import Control.Monad()
 import Control.Monad.Trans()
 import Control.Monad.Cont
@@ -50,7 +51,15 @@ instance (Monad m) => Monad (MaybeT m) where
   return = lift . return
   x >>= f = MaybeT (runMaybeT x >>= maybe (return Nothing) (runMaybeT . f))
 
-instance (Monad m) => MonadPlus (MaybeT m) where
+instance (Monad m, Applicative m) => Applicative (MaybeT m) where
+  pure = return
+  (<*>) = ap
+
+instance (Monad m, Alternative m) => Alternative (MaybeT m) where
+  empty = mzero
+  (<|>) = mplus
+
+instance (Alternative m, Monad m) => MonadPlus (MaybeT m) where
   mzero = MaybeT (return Nothing)
   mplus x y = MaybeT $ do v <- runMaybeT x
                           case v of
